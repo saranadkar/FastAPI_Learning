@@ -1,4 +1,3 @@
-# fast api methods
 from fastapi import FastAPI
 import json
 from pathlib import Path
