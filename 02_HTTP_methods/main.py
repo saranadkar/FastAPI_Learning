@@ -6,7 +6,7 @@ app = FastAPI()
 
 BASE_DIR = Path("D:/FastAPI_Learning/02_HTTP_methods")
 
-def load_load():
+def load_data():
     with open(BASE_DIR/'patient.json','r') as f:
         data = json.load(f)
     return data
@@ -21,5 +21,5 @@ def about():
 
 @app.get("/view")
 def view():
-    data = load_load()
+    data = load_data()
     return data

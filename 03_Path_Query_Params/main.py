@@ -1,4 +1,4 @@
-from fastapi import FastAPI,path
+from fastapi import FastAPI,Path
 import json
 from pathlib import Path
 
@@ -6,7 +6,7 @@ app = FastAPI()
 
 BASE_DIR = Path("D:/FastAPI_Learning/02_HTTP_methods")
 
-def load_load():
+def load_data():
     with open(BASE_DIR/'patient.json','r') as f:
         data = json.load(f)
     return data
@@ -21,13 +21,13 @@ def about():
 
 @app.get("/view")
 def view():
-    data = load_load()
+    data = load_data()
     return data
 
 @app.get("/patient/{patient_id}")
-def view_patient(patient_id: str = path(..., description="ID of the patient in DB",example ="P001" )):
+def view_patient(patient_id: str = Path(..., description="ID of the patient in DB",example ="P001" )):
     # load the data
-    data = load_load()
+    data = load_data()
 
     if patient_id in data:
         return data[patient_id]
