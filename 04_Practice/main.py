@@ -174,3 +174,51 @@ def patient_count():
     return {
         "total_patients": total
     }
+
+
+
+# Q3. GET /patient/oldest
+# Create an endpoint that returns the oldest patient
+# from the database.
+@app.get('/patient/oldest')
+def get_oldest_patient():
+    
+    data = load_data()
+    
+    oldest =max(data.items(),key=lambda patient: patient["age"])
+    return oldest
+
+
+
+# Q4. GET /patient/youngest
+# Create an endpoint that returns the youngest patient
+# from the database.
+@app.get('/patient/youngest')
+def get_youngest_patient():
+    
+    data = load_data()
+    
+    oldest =min(data.items(),key=lambda patient: patient["age"])
+    return oldest
+
+
+
+# Q5. GET /search?name=sara
+# Create an endpoint that searches patients by name using
+# a query parameter. The search should ignore uppercase
+# and lowercase characters.
+@app.get('/search')
+def get_patient_by_name(name: str= Query(...,description="Enter patient name")):
+    
+    data = load_data()
+    
+    result=[]
+    
+    for patient in data.values():
+        if name.strip().lower() in patient["name"].strip().lower():
+            result.append(patient)
+            
+    if not result:
+        raise HTTPException(status_code=404,detail="patient not found")
+        
+    return result
