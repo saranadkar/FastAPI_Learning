@@ -222,3 +222,111 @@ def get_patient_by_name(name: str= Query(...,description="Enter patient name")):
         raise HTTPException(status_code=404,detail="patient not found")
         
     return result
+
+
+
+# Q6. GET /patients?age=30
+# Return all patients whose age is greater than the given age.
+# Example:
+# Request: GET /patients?age=30
+# Response: List of all patients with age > 30.
+@app.get('/patients')
+def get_patient_by_age(age: int=Query(...,description="Enter age of patient")):
+    
+    result = []
+    
+    data = load_data()
+    
+    for patient in data.values():
+        if patient["age"]>age:
+            result.append(patient)
+
+    if not result:
+        raise HTTPException(status_code=404,detail="patient not found")
+    
+    return result
+
+
+# Q7. GET /patients/verdict?category=Normal
+# Return all patients belonging to the specified BMI category.
+# Categories:
+# - Underweight
+# - Normal
+# - Overweight
+# - Obese
+# Example:
+# Request: GET /patients/verdict?category=Normal
+# Response: List of all patients whose BMI category is "Normal".
+@app.get('/patients/verdict')
+def get_patient_by_bmi_category(category: str=Query(...,description="Enter category of patient")):
+    
+    result = []
+    
+    data = load_data()
+    
+    for patient in data.values():
+        if patient["verdict"].lower()==category.lower():
+            result.append(patient)
+
+    if not result:
+        raise HTTPException(status_code=404,detail="patient not found")
+    
+    return result
+
+
+# Q8. GET /patients/height?min_height=1.5&max_height=1.8
+# Return all patients whose height falls within the given range (inclusive).
+# Example:
+# Request: GET /patients/height?min_height=1.5&max_height=1.8
+# Response: List of all patients with height between 1.5 and 1.8 meters.
+@app.get('/patients/height')
+def get_patients_by_height(
+    min_height:float=Query(...,description="Enter minimum height of patient"),
+    max_height:float=Query(...,description="Enter maximum height of patient")):
+    
+    result = []
+    
+    data = load_data()
+    
+    for patient in data.values():
+        if patient["height"]>=min_height and patient["height"]<=max_height:
+            result.append(patient)
+    
+    if not result:
+        raise HTTPException(
+        status_code=404,
+        detail="Patient not found"
+    )
+    
+    return result
+
+
+# Q9. GET /patients?skip=0&limit=3
+# Implement pagination.
+# Return a limited number of patients after skipping the specified number of records.
+# Example:
+# Request: GET /patients?skip=2&limit=3
+# Response: Returns 3 patients starting from index 2.
+@app.get('/patients/pagination')
+def get_patient_by_pagination(
+    skip: int = Query(..., description="Number of records to skip"),
+    limit: int = Query(..., description="Maximum number of records to return")
+    ):
+    
+    data = load_data()
+    
+    # Convert dictionary values into a list
+    patients=list(data.values())
+    
+    # Return patients after skipping 'skip' records
+    result = patients[skip:skip+limit]
+            
+    
+    if not result:
+        raise HTTPException(
+        status_code=404,
+        detail="Patient not found"
+    )
+    
+    return result
+    
