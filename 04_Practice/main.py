@@ -329,4 +329,32 @@ def get_patient_by_pagination(
     )
     
     return result
+
+
+# Q10. GET /patients/sort?sorted_by=age
+# sorting endpoint to support multiple fields.
+#
+# Requirements:
+# - Sort patients by any one of the following fields:
+#   • age
+#   • city
+#   • name
+#
+# Example Requests:
+# GET /patients/sort?sorted_by=age
+# GET /patients/sort?sorted_by=city
+# GET /patients/sort?sorted_by=name
+
+@app.get('/patients/sort')
+def sort_patients(sorted_by:str = Query(...,description="Sort patients by age, city, or name")):
     
+    valid_fields=["age","city","name"]
+    
+    if sorted_by not in valid_fields:
+        raise HTTPException(status_code=400,detail=f'select from given {valid_fields} fields')
+    
+    data = load_data()
+    
+    sorted_data = sorted(data.values(), key=lambda x:x[sorted_by])
+    
+    return sorted_data
