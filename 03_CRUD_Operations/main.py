@@ -49,7 +49,7 @@ class PatientUpdate(BaseModel):
     weight:Annotated[Optional[float], Field(default=None,gt=0)]
 
 
-BASE_DIR = filepath("D:/FastAPI_Learning/03_Path_Query_Params")
+BASE_DIR = filepath("D:/FastAPI_Learning/03_CRUD_Operations")
 
 
 def load_data():
@@ -159,7 +159,7 @@ def update_patient(patient_id:str,patient_update:PatientUpdate):
 
 
 @app.delete("/delete,{patient_id}")
-def delete_patient(patient_id:st0):
+def delete_patient(patient_id:str):
 
     data = load_data()
 
@@ -171,3 +171,18 @@ def delete_patient(patient_id:st0):
     save_data(data)
 
     return JSONResponse(status_code=200, content={'message':'patient deleted'})
+
+
+@app.get('/patient/city/{city_name}')
+def patient_city(city_name:str):
+
+    patients = []
+    data = load_data()
+    for patient in data.values():
+        if patient["city"].lower() == city_name.lower():
+            patients.append(patient)
+
+    if not patients:
+        raise HTTPException(status_code=404, detail="Patient not found")
+
+    return patients
